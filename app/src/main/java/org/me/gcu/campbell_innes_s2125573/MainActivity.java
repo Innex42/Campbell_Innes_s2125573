@@ -3,6 +3,7 @@ package org.me.gcu.campbell_innes_s2125573;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Xml;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
@@ -18,8 +20,7 @@ import java.net.URLConnection;
 import java.util.LinkedList;
 
 
-import org.me.gcu.campbell_innes_s2125573.ItemClass;
-import org.me.gcu.campbell_innes_s2125573.R;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements
     private String result = "";
     private String[] items;
     private String url1="";
+    XmlPullParser parser = Xml.newPullParser();
     // Traffic Scotland Planned Roadworks XML link
     private String
             urlSource="https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
@@ -95,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements
                 // The useful data that you need is in each of the item entries
 
                 //
+
+
                 while ((inputLine = in.readLine()) != null)
                 {
                     result = result + inputLine;
@@ -134,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements
                 Log.e("MyTag","List is null");
             }
 
+
             //
             // Now that you have the xml data you can parse it
             //
@@ -153,8 +158,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public LinkedList<ItemClass> parseData(String dataToParse)
     {
-        ItemClass item = null;
-        LinkedList <ItemClass> alist = null;
+        ItemClass item= null;
+        LinkedList <ItemClass> alist=null;
         try
         {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -184,62 +189,64 @@ public class MainActivity extends AppCompatActivity implements
                     {
                         Log.e("MyTag","item is " + item.toString());
                         alist.add(item);
-                    }else if (xpp.getName().equalsIgnoreCase("title"))
-                    {
-                        // Now just get the associated text
-                        String temp = xpp.nextText();
-                        // Do something with text
-                        Log.e("MyTag","Title is " + temp);
-                        item.setTitle(temp);
-                    }
-                    else
-                        // Check which Tag we have
-                        if (xpp.getName().equalsIgnoreCase("description"))
+
+                        if (xpp.getName().equalsIgnoreCase("title"))
                         {
                             // Now just get the associated text
                             String temp = xpp.nextText();
                             // Do something with text
-                            Log.e("MyTag","Description is " + temp);
-                            item.setDescription(temp);
+                            Log.e("MyTag","Title is " + temp);
+                            item.setTitle(temp);
                         }
                         else
                             // Check which Tag we have
-                            if (xpp.getName().equalsIgnoreCase("link"))
+                            if (xpp.getName().equalsIgnoreCase("description"))
                             {
                                 // Now just get the associated text
                                 String temp = xpp.nextText();
                                 // Do something with text
-                                Log.e("MyTag","link is " + temp);
-                                item.setLink(temp);
+                                Log.e("MyTag","Description is " + temp);
+                                item.setDescription(temp);
                             }
                             else
                                 // Check which Tag we have
-                                if (xpp.getName().equalsIgnoreCase("georss:point"))
+                                if (xpp.getName().equalsIgnoreCase("link"))
                                 {
                                     // Now just get the associated text
                                     String temp = xpp.nextText();
                                     // Do something with text
-                                    Log.e("MyTag","GeoRSS:Point is " + temp);
-                                    item.setGeoPoint(temp);
+                                    Log.e("MyTag","link is " + temp);
+                                    item.setLink(temp);
                                 }
                                 else
                                     // Check which Tag we have
-                                    if (xpp.getName().equalsIgnoreCase("pubDate"))
+                                    if (xpp.getName().equalsIgnoreCase("georss:point"))
                                     {
                                         // Now just get the associated text
                                         String temp = xpp.nextText();
                                         // Do something with text
-                                        Log.e("MyTag","PubDate is " + temp);
-                                        item.setDate(temp);
+                                        Log.e("MyTag","GeoRSS:Point is " + temp);
+                                        item.setGeoPoint(temp);
                                     }
-                                    else if (xpp.getName().equalsIgnoreCase("channel"))
-                                    {
-                                        int size;
-                                        size = alist.size();
-                                        Log.e("MyTag","channel size is " + size);
-                                    }
+                                    else
+                                        // Check which Tag we have
+                                        if (xpp.getName().equalsIgnoreCase("pubDate"))
+                                        {
+                                            // Now just get the associated text
+                                            String temp = xpp.nextText();
+                                            // Do something with text
+                                            Log.e("MyTag","PubDate is " + temp);
+                                            item.setDate(temp);
+                                        }
+                                        else if (xpp.getName().equalsIgnoreCase("channel"))
+                                        {
+                                            int size;
+                                            size = alist.size();
+                                            Log.e("MyTag","channel size is " + size);
+                                        }
 
-                }
+                    }
+                    }
 
 
                 // Get the next event
@@ -265,3 +272,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 }
+
+
+
