@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements
     private String result = "";
     private String[] items;
     private String url1="";
+    private Integer itemCounter=0;
     XmlPullParser parser = Xml.newPullParser();
     // Traffic Scotland Planned Roadworks XML link
     private String
@@ -98,11 +99,11 @@ public class MainActivity extends AppCompatActivity implements
 
                 //
 
-
                 while ((inputLine = in.readLine()) != null)
                 {
                     result = result + inputLine;
                     Log.e("MyTag",inputLine);
+                    itemCounter=itemCounter+1;
                 }
                 in.close();
             }
@@ -111,10 +112,10 @@ public class MainActivity extends AppCompatActivity implements
                 Log.e("MyTag", "ioexception in run");
             }
 
+            System.out.println(result);
             //parsing starts here
-
             LinkedList<ItemClass> alist = null;
-            items = new String[50];
+            items = new String[itemCounter];
 
             //Make call to parsing code
             //Note this is not the best location
@@ -158,8 +159,8 @@ public class MainActivity extends AppCompatActivity implements
 
     public LinkedList<ItemClass> parseData(String dataToParse)
     {
-        ItemClass item= null;
-        LinkedList <ItemClass> alist=null;
+
+        LinkedList <ItemClass> alist = null;
         try
         {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -167,85 +168,105 @@ public class MainActivity extends AppCompatActivity implements
             XmlPullParser xpp = factory.newPullParser();
             xpp.setInput( new StringReader( dataToParse ) );
             int eventType = xpp.getEventType();
+            boolean withinItem = false;
+
+            ItemClass item= null;
+
             while (eventType != XmlPullParser.END_DOCUMENT)
             {
                 // Found a start tag
                 if(eventType == XmlPullParser.START_TAG)
                 {
                     // Check which Tag we have
+                    if (xpp.getName().equalsIgnoreCase("channel"))
+                    {
+                        alist  = new LinkedList<ItemClass>();
+                    }
+                    else
                     if (xpp.getName().equalsIgnoreCase("item"))
                     {
+                        withinItem=true;
                         Log.e("MyTag","Item Start Tag found");
                         item = new ItemClass();
-
-
                     }
+                    else
+                    if (xpp.getName().equalsIgnoreCase("title"))
+                    {
+                        if (withinItem) {
+                            // Now just get the associated text
+                            String temp = xpp.nextText();
+                            // Do something with text
+                            Log.e("MyTag", "Title is " + temp);
+                            item.setTitle(temp);
+                        }
+                    }
+                    else
+                        // Check which Tag we have
+                        if (xpp.getName().equalsIgnoreCase("description"))
+                        {
+                            if (withinItem) {
+                                // Now just get the associated text
+                                String temp = xpp.nextText();
+                                // Do something with text
+                                Log.e("MyTag", "Description is " + temp);
+                                item.setDescription(temp);
+                            }
+                        }
+                        else
+                            // Check which Tag we have
+                            if (xpp.getName().equalsIgnoreCase("link"))
+                            {
+                                if(withinItem) {
+                                    // Now just get the associated text
+                                    String temp = xpp.nextText();
+                                    // Do something with text
+                                    Log.e("MyTag", "link is " + temp);
+                                    item.setLink(temp);
+                                }
+                            }
+                            else
+                                // Check which Tag we have
+                                if (xpp.getName().equalsIgnoreCase("georss:point"))
+                                {
+                                    if(withinItem) {
+                                        // Now just get the associated text
+                                        String temp = xpp.nextText();
+                                        // Do something with text
+                                        Log.e("MyTag", "GeoRSS:Point is " + temp);
+                                        item.setGeoPoint(temp);
+                                    }
+                                }
+                                else
+                                    // Check which Tag we have
+                                    if (xpp.getName().equalsIgnoreCase("pubDate"))
+                                    {
+                                        if(withinItem) {
+                                            // Now just get the associated text
+                                            String temp = xpp.nextText();
+                                            // Do something with text
+                                            Log.e("MyTag", "PubDate is " + temp);
+                                            item.setDate(temp);
+                                        }
+                                    }
+
 
                 }
                 else
                 if(eventType == XmlPullParser.END_TAG)
                 {
-                    if (xpp.getName().equalsIgnoreCase("item"))
-                    {
-                        Log.e("MyTag","item is " + item.toString());
+                    if (xpp.getName().equalsIgnoreCase("item")) {
+                        Log.e("MyTag", "item is " + item.toString());
                         alist.add(item);
 
-                        if (xpp.getName().equalsIgnoreCase("title"))
-                        {
-                            // Now just get the associated text
-                            String temp = xpp.nextText();
-                            // Do something with text
-                            Log.e("MyTag","Title is " + temp);
-                            item.setTitle(temp);
-                        }
-                        else
-                            // Check which Tag we have
-                            if (xpp.getName().equalsIgnoreCase("description"))
-                            {
-                                // Now just get the associated text
-                                String temp = xpp.nextText();
-                                // Do something with text
-                                Log.e("MyTag","Description is " + temp);
-                                item.setDescription(temp);
-                            }
-                            else
-                                // Check which Tag we have
-                                if (xpp.getName().equalsIgnoreCase("link"))
-                                {
-                                    // Now just get the associated text
-                                    String temp = xpp.nextText();
-                                    // Do something with text
-                                    Log.e("MyTag","link is " + temp);
-                                    item.setLink(temp);
-                                }
-                                else
-                                    // Check which Tag we have
-                                    if (xpp.getName().equalsIgnoreCase("georss:point"))
-                                    {
-                                        // Now just get the associated text
-                                        String temp = xpp.nextText();
-                                        // Do something with text
-                                        Log.e("MyTag","GeoRSS:Point is " + temp);
-                                        item.setGeoPoint(temp);
-                                    }
-                                    else
-                                        // Check which Tag we have
-                                        if (xpp.getName().equalsIgnoreCase("pubDate"))
-                                        {
-                                            // Now just get the associated text
-                                            String temp = xpp.nextText();
-                                            // Do something with text
-                                            Log.e("MyTag","PubDate is " + temp);
-                                            item.setDate(temp);
-                                        }
-                                        else if (xpp.getName().equalsIgnoreCase("channel"))
-                                        {
-                                            int size;
-                                            size = alist.size();
-                                            Log.e("MyTag","channel size is " + size);
-                                        }
 
-                    }
+                    }else if (xpp.getName().equalsIgnoreCase("channel"))
+                        {
+                            int size;
+                            size = alist.size();
+                            Log.e("MyTag","channel size is " + size);
+                        }
+
+
                     }
 
 

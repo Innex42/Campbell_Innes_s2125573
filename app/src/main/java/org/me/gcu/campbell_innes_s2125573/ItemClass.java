@@ -2,11 +2,11 @@ package org.me.gcu.campbell_innes_s2125573;
 
 public class ItemClass {
 
-        private String title;
-        private String description;
-        private String link;
-        private String geoPoint;
-        private String date;
+        private String title="";
+        private String description="";
+        private String link="";
+        private String geoPoint="";
+        private String date="";
 
         public String getTitle() {
             return title;
@@ -49,8 +49,8 @@ public class ItemClass {
                     ", description='" + description + '\'' +
                     ", link='" + link + '\'' +
                     ", geoPoint='" + geoPoint + '\'' +
-                    ", date='" + date + '\'' +
-                    '}';
+                    ", date='" + date + '\''
+                    ;
             return temp;
         }
     }
