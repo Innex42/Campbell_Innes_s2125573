@@ -3,9 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/innex/AndroidStudioProjects/campbell_innes_s21255732/app/src/main/res/layout/activity_main.xml" value="0.1762917933130699" />
+        <entry key="..\:/Users/innex/AndroidStudioProjects/campbell_innes_s21255732/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3365" />
+        <entry key="..\:/Users/innex/AndroidStudioProjects/campbell_innes_s21255732/app/src/main/res/layout/activity_main.xml" value="0.3625" />
         <entry key="..\:/Users/innex/AndroidStudioProjects/campbell_innes_s21255732/app/src/main/res/layout/activity_maps.xml" value="0.358695652173913" />
+        <entry key="..\:/Users/innex/AndroidStudioProjects/campbell_innes_s21255732/app/src/main/res/layout/fragment_planned_r_w.xml" value="0.3625" />
+        <entry key="..\:/Users/innex/AndroidStudioProjects/campbell_innes_s21255732/app/src/main/res/layout/fragment_planned_r_w_list.xml" value="0.3484375" />
         <entry key="..\:/Users/innex/AndroidStudioProjects/campbell_innes_s21255732/app/src/main/res/layout/item_layout.xml" value="0.3625" />
+        <entry key="..\:/Users/innex/AndroidStudioProjects/campbell_innes_s21255732/app/src/main/res/menu/top_app_bar.xml" value="0.3625" />
         <entry key="..\:/Users/innex/AndroidStudioProjects/campbell_innes_s21255732/app/src/main/res/xml/activity_main.xml" value="0.358695652173913" />
       </map>
     </option>

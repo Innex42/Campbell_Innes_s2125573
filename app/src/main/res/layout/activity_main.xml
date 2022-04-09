@@ -1,42 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- MPD XML Starter code Semester B Session 2020 2021 -->
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="fill_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-        <TextView
-            android:id="@+id/salutation"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="Welcome to Mobile Platform Development Assignment
-2021-2022"/>
+
         <Button
-            android:id="@+id/startButton"
+            android:id="@+id/currentIncidentsButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Press to get data"/>
-        <TextView
-            android:id="@+id/acknowledgement"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="Contains Traffic Scotland Data"/>
+            android:text="Current Incidents" />
 
-        <ListView
-            android:id="@+id/listView1"
+        <Button
+            android:id="@+id/roadworksButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-        </ListView>
-
-        <TextView
-            android:id="@+id/rawDataDisplay"
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="Raw Data is Displayed here"/>
+            android:text="Roadworks" />
+
+        <Button
+            android:id="@+id/plannedRWButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Planned Roadworks" />
+
+
     </LinearLayout>
 </ScrollView>

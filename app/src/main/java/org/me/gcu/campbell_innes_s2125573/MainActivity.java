@@ -31,6 +31,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 public class MainActivity extends AppCompatActivity implements
         OnClickListener
 {
+    private Button currentIncidentsButton;
+    private Button plannedRWButton;
+    private Button roadworksButton;
     private TextView rawDataDisplay;
     private Button startButton;
     private String result = "";
@@ -48,9 +51,15 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         Log.e("MyTag","in onCreate");
         // Set up the raw links to the graphical components
-        rawDataDisplay = (TextView)findViewById(R.id.rawDataDisplay);
-        startButton = (Button)findViewById(R.id.startButton);
-        startButton.setOnClickListener(this);
+
+        currentIncidentsButton = (Button)findViewById(R.id.currentIncidentsButton);
+        plannedRWButton=(Button)findViewById(R.id.plannedRWButton);
+        roadworksButton=(Button)findViewById(R.id.roadworksButton);
+
+
+        currentIncidentsButton.setOnClickListener(this);
+        plannedRWButton.setOnClickListener(this);
+        roadworksButton.setOnClickListener(this);
         Log.e("MyTag","after startButton");
         // More Code goes here
     }
@@ -62,6 +71,17 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v)
     {
+        switch(v.getId()){
+            case R.id.roadworksButton:
+                urlSource="https://trafficscotland.org/rss/feeds/roadworks.aspx";
+                break;
+            case R.id.plannedRWButton:
+                urlSource="https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
+                break;
+            case R.id.currentIncidentsButton:
+                urlSource="https://trafficscotland.org/rss/feeds/currentincidents.aspx";
+                break;
+        }
         Log.e("MyTag","in onClick");
         startProgress();
         Log.e("MyTag","after startProgress");
@@ -150,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements
             {
                 public void run() {
                     Log.d("UI thread", "I am the UI thread");
-                    rawDataDisplay.setText(result);
+                    //rawDataDisplay.setText(result);
                 }
             });
         }
@@ -226,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements
                             }
                             else
                                 // Check which Tag we have
-                                if (xpp.getName().equalsIgnoreCase("georss:point"))
+                                if (xpp.getName().equalsIgnoreCase("point"))
                                 {
                                     if(withinItem) {
                                         // Now just get the associated text
@@ -260,14 +280,14 @@ public class MainActivity extends AppCompatActivity implements
 
 
                     }else if (xpp.getName().equalsIgnoreCase("channel"))
-                        {
-                            int size;
-                            size = alist.size();
-                            Log.e("MyTag","channel size is " + size);
-                        }
-
-
+                    {
+                        int size;
+                        size = alist.size();
+                        Log.e("MyTag","channel size is " + size);
                     }
+
+
+                }
 
 
                 // Get the next event
@@ -293,6 +313,3 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 }
-
-
-
