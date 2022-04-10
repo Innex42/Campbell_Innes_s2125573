@@ -8,6 +8,14 @@ public class ItemClass {
         private String geoPoint="";
         private String date="";
 
+        public ItemClass(){
+            this.title = title;
+            this.description = description;
+            this.link = link;
+            this.geoPoint = geoPoint;
+            this.date = date;
+        }
+
         public String getTitle() {
             return title;
         }

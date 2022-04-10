@@ -6,7 +6,9 @@ import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements
     private Button plannedRWButton;
     private Button roadworksButton;
     private TextView rawDataDisplay;
+    private ListView listview;
     private Button startButton;
     private String result = "";
     private String[] items;
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements
         currentIncidentsButton = (Button)findViewById(R.id.currentIncidentsButton);
         plannedRWButton=(Button)findViewById(R.id.plannedRWButton);
         roadworksButton=(Button)findViewById(R.id.roadworksButton);
+        listview=(ListView)findViewById(R.id.listView);
 
 
         currentIncidentsButton.setOnClickListener(this);
@@ -171,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements
                 public void run() {
                     Log.d("UI thread", "I am the UI thread");
                     //rawDataDisplay.setText(result);
+                    ListAdapter adapter =new ListAdapter(getApplicationContext(), R.layout.item_layout,items);
+                    listview.setAdapter(adapter);
+
                 }
             });
         }
