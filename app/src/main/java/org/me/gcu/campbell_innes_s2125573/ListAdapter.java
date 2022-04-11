@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class ListAdapter extends ArrayAdapter<ItemClass> {
@@ -18,8 +19,8 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
     private Context mContext;
     int mResource;
 
-    public ListAdapter(@NonNull Context context, int resource, @NonNull List<ItemClass> objects) {
-        super(context, resource, objects);
+    public ListAdapter(@NonNull Context context, int resource, LinkedList<ItemClass> item) {
+        super(context, resource, item);
         mContext = context;
         mResource = resource;
     }
@@ -40,11 +41,19 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
 
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        convertView=inflater.inflate(mResource, parent, false);
+        convertView = inflater.inflate(mResource, parent, false);
 
-        TextView tvName =(TextView) convertView.findViewById(R.id.titleText);
+        TextView tvName = (TextView) convertView.findViewById(R.id.titleText);
+        TextView tvDescription = (TextView) convertView.findViewById(R.id.descriptionText);
+        TextView tvLink = (TextView) convertView.findViewById(R.id.linkText);
+        TextView tvGeoPoint = (TextView) convertView.findViewById(R.id.geoPointText);
+        TextView tvDate = (TextView) convertView.findViewById(R.id.pubDateText);
 
         tvName.setText(title);
+        tvDescription.setText(description);
+        tvLink.setText(link);
+        tvGeoPoint.setText(geoPoint);
+        tvDate.setText(date);
 
         return convertView;
     }

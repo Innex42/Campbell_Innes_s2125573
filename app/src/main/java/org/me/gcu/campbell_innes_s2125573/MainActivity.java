@@ -170,14 +170,15 @@ public class MainActivity extends AppCompatActivity implements
             // Now update the TextView to display raw XML data
             // Probably not the best way to update TextView
             // but we are just getting started !
+            LinkedList<ItemClass> finalAlist = alist;
             MainActivity.this.runOnUiThread(new Runnable()
             {
                 public void run() {
                     Log.d("UI thread", "I am the UI thread");
                     //rawDataDisplay.setText(result);
-                    ListAdapter adapter =new ListAdapter(getApplicationContext(), R.layout.item_layout,items);
+                    listview.setAdapter(null);
+                    ListAdapter adapter =new ListAdapter(getApplicationContext(), R.layout.item_layout, finalAlist);
                     listview.setAdapter(adapter);
-
                 }
             });
         }

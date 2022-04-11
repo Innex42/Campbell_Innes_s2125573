@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">campbell_innes_s2125573</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Transport Scotland</string>
 </resources>
