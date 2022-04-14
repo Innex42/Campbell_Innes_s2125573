@@ -1,10 +1,12 @@
 package org.me.gcu.campbell_innes_s2125573;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,9 +37,9 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
         String description = getItem(position).getDescription();
         String link = getItem(position).getLink();
         String geoPoint = getItem(position).getGeoPoint();
-        String date = getItem(position).getDate();
-
-
+        String pubDate = getItem(position).getPubDate();
+        Float latitude = getItem(position).getLatitude();
+        Float longitude = getItem(position).getLongitude();
 
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -47,13 +49,29 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
         TextView tvDescription = (TextView) convertView.findViewById(R.id.descriptionText);
         TextView tvLink = (TextView) convertView.findViewById(R.id.linkText);
         TextView tvGeoPoint = (TextView) convertView.findViewById(R.id.geoPointText);
-        TextView tvDate = (TextView) convertView.findViewById(R.id.pubDateText);
+        TextView tvPubDate = (TextView) convertView.findViewById(R.id.pubDateText);
+        Button mapsButton = (Button) convertView.findViewById(R.id.mapsButton);
+        mapsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Hey look this button was clicked" + title);
+                Intent mapsIntent = new Intent(getContext(),MapsActivity.class);
+                mapsIntent.putExtra("latitude", latitude);
+                mapsIntent.putExtra("longitude", longitude);
+                mapsIntent.putExtra("title", title);
+                mapsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                getContext().startActivity(mapsIntent);
+            }
+        });
+
+
 
         tvName.setText(title);
         tvDescription.setText(description);
         tvLink.setText(link);
         tvGeoPoint.setText(geoPoint);
-        tvDate.setText(date);
+        tvPubDate.setText(pubDate);
 
         return convertView;
     }

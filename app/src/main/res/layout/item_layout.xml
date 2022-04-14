@@ -18,33 +18,76 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="description"
-        android:textSize="13sp"
-         />
+        android:textSize="13sp" />
 
-    <TextView
-        android:id="@+id/linkText"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/linkLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Link: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/linkText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="link"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/geoPointLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Event Location: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/geoPointText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="GeoPoint"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/pubDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Date Published: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/pubDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pubdate"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/mapsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="link"
-        android:textSize="13sp"
-        />
-
-    <TextView
-        android:id="@+id/geoPointText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="GeoPoint"
-        android:textSize="13sp"
-        />
-
-    <TextView
-        android:id="@+id/pubDateText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pubdate"
-        android:textSize="13sp"
-        />
-
+        android:text="VIew on a Map" />
 
 
 </LinearLayout>

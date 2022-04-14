@@ -6,14 +6,18 @@ public class ItemClass {
         private String description="";
         private String link="";
         private String geoPoint="";
-        private String date="";
+        private Float latitude;
+        private Float longitude;
+        private String pubDate="";
 
         public ItemClass(){
             this.title = title;
             this.description = description;
             this.link = link;
             this.geoPoint = geoPoint;
-            this.date = date;
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.pubDate = pubDate;
         }
 
         public String getTitle() {
@@ -42,11 +46,19 @@ public class ItemClass {
 
         public void setGeoPoint(String geoPoint) { this.geoPoint = geoPoint; }
 
-        public String getDate() {
-            return date;
+        public Float getLatitude(){ return latitude; }
+
+        public void setLatitude(Float latitude){ this.latitude = latitude; }
+
+        public Float getLongitude(){ return longitude; }
+
+        public void setLongitude(Float longitude){ this.longitude = longitude; }
+
+        public String getPubDate() {
+            return pubDate;
         }
 
-        public void setDate(String date) { this.date = date; }
+        public void setPubDate(String pubDate) { this.pubDate = pubDate; }
 
         @Override
         public String toString() {
@@ -57,7 +69,9 @@ public class ItemClass {
                     ", description='" + description + '\'' +
                     ", link='" + link + '\'' +
                     ", geoPoint='" + geoPoint + '\'' +
-                    ", date='" + date + '\''
+                    ", pubDate='" + pubDate + '\'' +
+                    ", latitude='" + latitude + '\'' +
+                    ", longitude='" + longitude + '\''
                     ;
             return temp;
         }

@@ -6,7 +6,6 @@ import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
@@ -36,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements
     private Button currentIncidentsButton;
     private Button plannedRWButton;
     private Button roadworksButton;
+    private Button mapsButton;
     private TextView rawDataDisplay;
     private ListView listview;
     private Button startButton;
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements
     XmlPullParser parser = Xml.newPullParser();
     // Traffic Scotland Planned Roadworks XML link
     private String
-            urlSource="https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
+            urlSource;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -164,12 +163,7 @@ public class MainActivity extends AppCompatActivity implements
             }
 
 
-            //
-            // Now that you have the xml data you can parse it
-            //
-            // Now update the TextView to display raw XML data
-            // Probably not the best way to update TextView
-            // but we are just getting started !
+
             LinkedList<ItemClass> finalAlist = alist;
             MainActivity.this.runOnUiThread(new Runnable()
             {
@@ -238,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements
                                 // Do something with text
                                 Log.e("MyTag", "Description is " + temp);
                                 item.setDescription(temp);
+
                             }
                         }
                         else
@@ -262,6 +257,14 @@ public class MainActivity extends AppCompatActivity implements
                                         // Do something with text
                                         Log.e("MyTag", "GeoRSS:Point is " + temp);
                                         item.setGeoPoint(temp);
+                                        String[] coordSplit = temp.split(" ");
+                                        Float lat = Float.valueOf(coordSplit[0]);
+                                        Float longi = Float.valueOf(coordSplit[1]);
+                                        item.setLatitude(lat);
+                                        item.setLongitude(longi);
+
+                                        //for (String a : coordSplit)
+                                            //System.out.println(a);
                                     }
                                 }
                                 else
@@ -273,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements
                                             String temp = xpp.nextText();
                                             // Do something with text
                                             Log.e("MyTag", "PubDate is " + temp);
-                                            item.setDate(temp);
+                                            item.setPubDate(temp);
                                         }
                                     }
 

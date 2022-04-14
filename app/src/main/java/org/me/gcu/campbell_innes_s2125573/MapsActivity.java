@@ -2,6 +2,7 @@ package org.me.gcu.campbell_innes_s2125573;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,9 +45,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        Intent mapsIntent = getIntent();
+
+        Float latitude = mapsIntent.getFloatExtra("latitude",0);
+        Float longitude = mapsIntent.getFloatExtra("longitude",0);
+        String title = mapsIntent.getStringExtra("title");
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng marker = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(marker).title(title));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker,15));
+        //mMap.animateCamera();
     }
 }
