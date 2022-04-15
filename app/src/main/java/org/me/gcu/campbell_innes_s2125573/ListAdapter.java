@@ -2,6 +2,7 @@ package org.me.gcu.campbell_innes_s2125573;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,6 +39,8 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
         String title = getItem(position).getTitle();
         //Put these here for now will add to listview once it starts working
         String description = getItem(position).getDescription();
+        Date startDate = getItem(position).getStartDate();
+        Date endDate = getItem(position).getEndDate();
         String link = getItem(position).getLink();
         String geoPoint = getItem(position).getGeoPoint();
         String pubDate = getItem(position).getPubDate();
@@ -50,6 +56,7 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
         TextView tvLink = (TextView) convertView.findViewById(R.id.linkText);
         TextView tvGeoPoint = (TextView) convertView.findViewById(R.id.geoPointText);
         TextView tvPubDate = (TextView) convertView.findViewById(R.id.pubDateText);
+        TextView tvTotalDays = (TextView) convertView.findViewById(R.id.totaldDaysText);
         Button mapsButton = (Button) convertView.findViewById(R.id.mapsButton);
         mapsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +72,9 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
             }
         });
 
+        Long difference = endDate.getTime() - startDate.getTime();
+        Float daysBetween = (difference.floatValue() / (1000*60*60*24));
+        Integer roundedDay = daysBetween.intValue();
 
 
         tvName.setText(title);
@@ -72,7 +82,23 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
         tvLink.setText(link);
         tvGeoPoint.setText(geoPoint);
         tvPubDate.setText(pubDate);
-
+        if (roundedDay==0){
+            tvTotalDays.setText("Current Incident");
+            tvTotalDays.setBackgroundColor(Color.GREEN);
+            tvTotalDays.setTextColor(Color.BLACK);
+        }else if(roundedDay <=10) {
+            tvTotalDays.setText(roundedDay.toString() + " Days");
+            tvTotalDays.setBackgroundColor(Color.GREEN);
+            tvTotalDays.setTextColor(Color.BLACK);
+        }else if(roundedDay <=60 && roundedDay >= 10) {
+            tvTotalDays.setText(roundedDay.toString() + " Days");
+            tvTotalDays.setBackgroundColor(Color.YELLOW);
+            tvTotalDays.setTextColor(Color.BLACK);
+        }else if(roundedDay >=60) {
+            tvTotalDays.setText(roundedDay.toString() + " Days");
+            tvTotalDays.setBackgroundColor(Color.RED);
+            tvTotalDays.setTextColor(Color.BLACK);
+        }
         return convertView;
     }
 }

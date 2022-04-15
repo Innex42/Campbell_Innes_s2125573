@@ -17,6 +17,10 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedList;
 
 
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements
     private String[] items;
     private String url1="";
     private Integer itemCounter=0;
+    private Boolean inCI = false;
     XmlPullParser parser = Xml.newPullParser();
     // Traffic Scotland Planned Roadworks XML link
     private String
@@ -83,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.currentIncidentsButton:
                 urlSource="https://trafficscotland.org/rss/feeds/currentincidents.aspx";
+                inCI=true;
                 break;
         }
         Log.e("MyTag","in onClick");
@@ -232,6 +238,49 @@ public class MainActivity extends AppCompatActivity implements
                                 // Do something with text
                                 Log.e("MyTag", "Description is " + temp);
                                 item.setDescription(temp);
+                                SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
+                                //if (!inCI){
+                                String[] descriptionSplit = temp.split("/>");
+                                String[] startTimeSplit = descriptionSplit[0].split("e: ");
+                                if(startTimeSplit[0]==temp){
+                                    try {
+                                        Date startDate = formatter.parse(formatter.format(new Date()));
+                                        Date endDate = formatter.parse(formatter.format(new Date()));
+                                        item.setStartDate(startDate);
+                                        item.setEndDate(endDate);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                }else {
+                                    startTimeSplit = startTimeSplit[1].split("<br");
+                                    startTimeSplit = startTimeSplit[0].split(", ");
+                                    startTimeSplit = startTimeSplit[1].split(" - ");
+                                    //above [0] is in good format for date
+
+                                    try {
+                                        Date startDate = formatter.parse(startTimeSplit[0]);
+                                        System.out.println(startDate);
+                                        item.setStartDate(startDate);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    String[] endTimeSplit = descriptionSplit[1].split("e: ");
+                                    endTimeSplit = endTimeSplit[1].split(", ");
+                                    endTimeSplit = endTimeSplit[1].split(" - ");
+                                    //above [0] is in good format for date
+                                    try {
+                                        Date endDate = formatter.parse(endTimeSplit[0]);
+                                        System.out.println(endDate);
+                                        item.setEndDate(endDate);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+                                /*for (String a : endTimeSplit){
+                                    System.out.println(a);
+                                }*/
+                                    // }
+                                }
 
                             }
                         }

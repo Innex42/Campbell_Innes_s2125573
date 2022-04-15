@@ -1,9 +1,13 @@
 package org.me.gcu.campbell_innes_s2125573;
 
+import java.util.Date;
+
 public class ItemClass {
 
         private String title="";
         private String description="";
+        private Date startDate;
+        private Date endDate;
         private String link="";
         private String geoPoint="";
         private Float latitude;
@@ -13,6 +17,8 @@ public class ItemClass {
         public ItemClass(){
             this.title = title;
             this.description = description;
+            this.startDate = startDate;
+            this.endDate = endDate;
             this.link = link;
             this.geoPoint = geoPoint;
             this.latitude = latitude;
@@ -30,13 +36,17 @@ public class ItemClass {
             return description;
         }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
+        public void setDescription(String description) { this.description = description; }
 
-        public String getLink() {
-            return link;
-        }
+        public Date getStartDate(){return startDate;}
+
+        public void setStartDate(Date startDate){this.startDate = startDate;}
+
+        public Date getEndDate(){return endDate;}
+
+        public void setEndDate(Date endDate){this.endDate = endDate;}
+
+        public String getLink() { return link; }
 
         public void setLink(String link) { this.link = link; }
 
@@ -68,6 +78,8 @@ public class ItemClass {
             temp = "title='" + title + '\'' +
                     ", description='" + description + '\'' +
                     ", link='" + link + '\'' +
+                    ", startDate='" + startDate + '\'' +
+                    ", endDate='" + endDate + '\'' +
                     ", geoPoint='" + geoPoint + '\'' +
                     ", pubDate='" + pubDate + '\'' +
                     ", latitude='" + latitude + '\'' +
