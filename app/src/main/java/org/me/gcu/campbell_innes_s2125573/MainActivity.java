@@ -3,12 +3,12 @@ package org.me.gcu.campbell_innes_s2125573;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Xml;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 
 import java.io.BufferedReader;
@@ -19,10 +19,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedList;
-
+import java.util.Locale;
 
 
 import org.xmlpull.v1.XmlPullParser;
@@ -38,19 +37,27 @@ public class MainActivity extends AppCompatActivity implements
     private Button currentIncidentsButton;
     private Button plannedRWButton;
     private Button roadworksButton;
-    private Button mapsButton;
-    private TextView rawDataDisplay;
+    private ProgressBar progressBar;
     private ListView listview;
-    private Button startButton;
-    private String result = "";
-    private String[] items;
-    private String url1="";
-    private Integer itemCounter=0;
-    private Boolean inCI = false;
-    XmlPullParser parser = Xml.newPullParser();
-    // Traffic Scotland Planned Roadworks XML link
-    private String
-            urlSource;
+    private String ciResult = "";
+    private String pRWResult = "";
+    private String rwResult = "";
+    private String[] ciItems;
+    private String[] pRWItems;
+    private String[] rwItems;
+    private String cIUrlSource ="https://trafficscotland.org/rss/feeds/currentincidents.aspx";
+    private String pRWUrlSource ="https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
+    private String roadworksUrlSource = "https://trafficscotland.org/rss/feeds/roadworks.aspx";
+    LinkedList<ItemClass> alist;
+    LinkedList<ItemClass> curIncList;
+    LinkedList<ItemClass> planRWList;
+    LinkedList<ItemClass> roadworksList;
+
+    Boolean listisPRW =false;
+    Boolean listisRW = false;
+    Boolean listisCI = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -62,51 +69,98 @@ public class MainActivity extends AppCompatActivity implements
         currentIncidentsButton = (Button)findViewById(R.id.currentIncidentsButton);
         plannedRWButton=(Button)findViewById(R.id.plannedRWButton);
         roadworksButton=(Button)findViewById(R.id.roadworksButton);
+        progressBar = (ProgressBar)findViewById(R.id.pBar);
         listview=(ListView)findViewById(R.id.listView);
+        progressBar.setVisibility(View.GONE);
 
-
+        searchWidget();
         currentIncidentsButton.setOnClickListener(this);
         plannedRWButton.setOnClickListener(this);
         roadworksButton.setOnClickListener(this);
+
         Log.e("MyTag","after startButton");
-        // More Code goes here
     }
-    public void startProgress()
-    {
-        // Run network access on a separate thread;
-        new Thread(new Task(urlSource)).start();
-    } //
+
+    private void searchWidget(){
+        SearchView searchView = (SearchView) findViewById(R.id.searchView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                LinkedList<ItemClass> filteredList = new LinkedList<ItemClass>();
+
+                if(listisRW){
+                    for(ItemClass item: roadworksList){
+                        if(item.getTitle().toLowerCase().contains(s.toLowerCase())){
+                            filteredList.add(item);
+                        }
+                    }
+                }else if (listisPRW){
+                    for(ItemClass item: planRWList){
+                        if(item.getTitle().toLowerCase().contains(s.toLowerCase())){
+                            filteredList.add(item);
+                        }
+                    }
+                } else if (listisCI){
+                    for(ItemClass item: curIncList){
+                        if(item.getTitle().toLowerCase().contains(s.toLowerCase())){
+                            filteredList.add(item);
+                        }
+                    }
+                }
+
+                ListAdapter adapter = new ListAdapter(getApplicationContext(),R.layout.item_layout, filteredList);
+                listview.setAdapter(adapter);
+
+                return false;
+            }
+        });
+    }
+
     @Override
     public void onClick(View v)
     {
+        progressBar.setVisibility(v.VISIBLE);
         switch(v.getId()){
             case R.id.roadworksButton:
-                urlSource="https://trafficscotland.org/rss/feeds/roadworks.aspx";
+                //urlSource="https://trafficscotland.org/rss/feeds/roadworks.aspx";
+                listisRW=true;
+                new Thread(new RoadworksDownload(roadworksUrlSource)).start();
                 break;
             case R.id.plannedRWButton:
-                urlSource="https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
+                //urlSource="https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
+                listisPRW=true;
+                new Thread(new PlannedRoadworksDownload(pRWUrlSource)).start();
                 break;
             case R.id.currentIncidentsButton:
-                urlSource="https://trafficscotland.org/rss/feeds/currentincidents.aspx";
-                inCI=true;
+                //urlSource="https://trafficscotland.org/rss/feeds/currentincidents.aspx";
+                listisCI=true;
+                new Thread(new CurrentIncidentsDownload(cIUrlSource)).start();
                 break;
         }
         Log.e("MyTag","in onClick");
-        startProgress();
-        Log.e("MyTag","after startProgress");
+        //Log.e("MyTag","after progressbar INVISIBLE");
     }
-    // Need separate thread to access the internet resource over network
-    // Other neater solutions should be adopted in later iterations.
-    private class Task implements Runnable
+
+    private class CurrentIncidentsDownload implements Runnable
     {
         private String url;
-        public Task(String aurl)
+        private Integer itemCounter=0;
+        public CurrentIncidentsDownload(String aurl)
         {
             url = aurl;
         }
         @Override
         public void run()
         {
+            if (curIncList != null){
+                curIncList.clear();
+            }
             URL aurl;
             URLConnection yc;
             BufferedReader in = null;
@@ -120,17 +174,9 @@ public class MainActivity extends AppCompatActivity implements
                 in = new BufferedReader(new
                         InputStreamReader(yc.getInputStream()));
                 Log.e("MyTag","after ready");
-                //
-                // Now read the data. Make sure that there are no specific hedrs
-
-                // in the data file that you need to ignore.
-                // The useful data that you need is in each of the item entries
-
-                //
-
                 while ((inputLine = in.readLine()) != null)
                 {
-                    result = result + inputLine;
+                    ciResult = ciResult + inputLine;
                     Log.e("MyTag",inputLine);
                     itemCounter=itemCounter+1;
                 }
@@ -141,27 +187,26 @@ public class MainActivity extends AppCompatActivity implements
                 Log.e("MyTag", "ioexception in run");
             }
 
-            System.out.println(result);
+            System.out.println(ciResult);
             //parsing starts here
-            LinkedList<ItemClass> alist = null;
-            items = new String[itemCounter];
+            ciItems = new String[itemCounter];
 
             //Make call to parsing code
             //Note this is not the best location
-            alist = parseData(result);
+            curIncList = parseData(ciResult);
 
             // Write list to Log for testing
-            if (alist != null)
+            if (curIncList != null)
             {
                 Log.e("MyTag","List not null");
                 int count = 0;
-                for (Object o : alist)
+                for (Object o : curIncList)
                 {
                     Log.e("MyTag",o.toString());
-                    items[count] = o.toString();
+                    ciItems[count] = o.toString();
                     count = count + 1;
                 }
-                Log.e("My Tag", "Array is " + items.toString());
+                Log.e("My Tag", "Array is " + ciItems.toString());
             }
             else
             {
@@ -170,19 +215,190 @@ public class MainActivity extends AppCompatActivity implements
 
 
 
-            LinkedList<ItemClass> finalAlist = alist;
+
             MainActivity.this.runOnUiThread(new Runnable()
             {
                 public void run() {
                     Log.d("UI thread", "I am the UI thread");
+                    progressBar.setVisibility(View.GONE);
                     //rawDataDisplay.setText(result);
                     listview.setAdapter(null);
-                    ListAdapter adapter =new ListAdapter(getApplicationContext(), R.layout.item_layout, finalAlist);
+                    ListAdapter adapter =new ListAdapter(getApplicationContext(), R.layout.item_layout, curIncList);
                     listview.setAdapter(adapter);
                 }
             });
         }
     }
+
+    private class PlannedRoadworksDownload implements Runnable
+{
+    private String url;
+    private Integer itemCounter=0;
+    public PlannedRoadworksDownload(String aurl)
+    {
+        url = aurl;
+    }
+    @Override
+    public void run()
+    {
+        if (planRWList != null){
+            planRWList.clear();
+        }
+        URL aurl;
+        URLConnection yc;
+        BufferedReader in = null;
+        String inputLine = "";
+        Log.e("MyTag","in run");
+        try
+        {
+            Log.e("MyTag","in try");
+            aurl = new URL(url);
+            yc = aurl.openConnection();
+            in = new BufferedReader(new
+                    InputStreamReader(yc.getInputStream()));
+            Log.e("MyTag","after ready");
+            while ((inputLine = in.readLine()) != null)
+            {
+                pRWResult = pRWResult + inputLine;
+                Log.e("MyTag",inputLine);
+                itemCounter=itemCounter+1;
+            }
+            in.close();
+        }
+        catch (IOException ae)
+        {
+            Log.e("MyTag", "ioexception in run");
+        }
+
+        System.out.println(pRWResult);
+        //parsing starts here
+        pRWItems = new String[itemCounter];
+
+        //Make call to parsing code
+        //Note this is not the best location
+        planRWList = parseData(pRWResult);
+
+        // Write list to Log for testing
+        if (planRWList != null)
+        {
+            Log.e("MyTag","List not null");
+            int count = 0;
+            for (Object o : planRWList)
+            {
+                Log.e("MyTag",o.toString());
+                pRWItems[count] = o.toString();
+                count = count + 1;
+            }
+            Log.e("My Tag", "Array is " + pRWItems.toString());
+        }
+        else
+        {
+            Log.e("MyTag","List is null");
+        }
+
+
+
+
+            MainActivity.this.runOnUiThread(new Runnable()
+            {
+                public void run() {
+                    Log.d("UI thread", "I am the UI thread");
+                    progressBar.setVisibility(View.GONE);
+                    //rawDataDisplay.setText(result);
+                    listview.setAdapter(null);
+                    ListAdapter adapter =new ListAdapter(getApplicationContext(), R.layout.item_layout, planRWList);
+                    listview.setAdapter(adapter);
+                }
+            });
+    }
+}
+
+
+    private class RoadworksDownload implements Runnable
+    {
+        private String url;
+        private Integer itemCounter=0;
+        public RoadworksDownload(String aurl)
+        {
+            url = aurl;
+        }
+        @Override
+        public void run()
+        {
+            if (roadworksList != null){
+                roadworksList.clear();
+            }
+            URL aurl;
+            URLConnection yc;
+            BufferedReader in = null;
+            String inputLine = "";
+            Log.e("MyTag","in run");
+            try
+            {
+                Log.e("MyTag","in try");
+                aurl = new URL(url);
+                yc = aurl.openConnection();
+                in = new BufferedReader(new
+                        InputStreamReader(yc.getInputStream()));
+                Log.e("MyTag","after ready");
+                while ((inputLine = in.readLine()) != null)
+                {
+                    rwResult = rwResult + inputLine;
+                    Log.e("MyTag",inputLine);
+                    itemCounter=itemCounter+1;
+                }
+                in.close();
+            }
+            catch (IOException ae)
+            {
+                Log.e("MyTag", "ioexception in run");
+            }
+
+            System.out.println(rwResult);
+            //parsing starts here
+            rwItems = new String[itemCounter];
+
+            //Make call to parsing code
+            //Note this is not the best location
+            roadworksList = parseData(rwResult);
+
+            // Write list to Log for testing
+            if (roadworksList != null)
+            {
+                Log.e("MyTag","List not null");
+                int count = 0;
+                for (Object o : roadworksList)
+                {
+                    Log.e("MyTag",o.toString());
+                    rwItems[count] = o.toString();
+                    count = count + 1;
+                }
+                Log.e("My Tag", "Array is " + rwItems.toString());
+            }
+            else
+            {
+                Log.e("MyTag","List is null");
+            }
+
+
+
+
+            MainActivity.this.runOnUiThread(new Runnable()
+            {
+                public void run() {
+                    Log.d("UI thread", "I am the UI thread");
+                    //rawDataDisplay.setText(result);
+                    progressBar.setVisibility(View.GONE);
+                    listview.setAdapter(null);
+                    ListAdapter adapter =new ListAdapter(getApplicationContext(), R.layout.item_layout, roadworksList);
+                    listview.setAdapter(adapter);
+                }
+            });
+        }
+    }
+
+
+
 
 
     public LinkedList<ItemClass> parseData(String dataToParse)

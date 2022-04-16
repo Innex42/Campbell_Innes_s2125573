@@ -9,7 +9,7 @@
         android:id="@+id/titleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="title"
+        android:text="@string/title"
         android:textSize="15sp"
         android:textStyle="bold" />
 
@@ -17,7 +17,7 @@
         android:id="@+id/descriptionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="description"
+        android:text="@string/description"
         android:textSize="13sp" />
 
     <LinearLayout
@@ -27,17 +27,17 @@
 
         <TextView
             android:id="@+id/linkLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Link: "
+            android:text="@string/link"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/linkText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="link"
+            android:text="@string/linkPlcaeHolder"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -48,17 +48,17 @@
 
         <TextView
             android:id="@+id/geoPointLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Event Location: "
+            android:text="@string/event_location"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/geoPointText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="GeoPoint"
+            android:text="@string/geopoint"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -69,17 +69,17 @@
 
         <TextView
             android:id="@+id/pubDateLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Date Published: "
+            android:text="@string/date_published"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/pubDateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pubdate"
+            android:text="@string/pubdate"
             android:textSize="13sp" />
     </LinearLayout>
 
@@ -93,22 +93,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Total days: "
+            android:text="@string/total_days"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/totaldDaysText"
+            android:id="@+id/totalDaysText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TotalDays" />
+            android:text="@string/totaldays" />
     </LinearLayout>
 
     <Button
         android:id="@+id/mapsButton"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="VIew on a Map" />
+        android:backgroundTint="#03A9F4"
+        android:text="@string/view_on_a_map"
+        android:theme="@style/Theme.Campbell_innes_s2125573" />
 
 
 </LinearLayout>

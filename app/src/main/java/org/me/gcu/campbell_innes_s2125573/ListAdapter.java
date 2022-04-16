@@ -56,7 +56,7 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
         TextView tvLink = (TextView) convertView.findViewById(R.id.linkText);
         TextView tvGeoPoint = (TextView) convertView.findViewById(R.id.geoPointText);
         TextView tvPubDate = (TextView) convertView.findViewById(R.id.pubDateText);
-        TextView tvTotalDays = (TextView) convertView.findViewById(R.id.totaldDaysText);
+        TextView tvTotalDays = (TextView) convertView.findViewById(R.id.totalDaysText);
         Button mapsButton = (Button) convertView.findViewById(R.id.mapsButton);
         mapsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +83,7 @@ public class ListAdapter extends ArrayAdapter<ItemClass> {
         tvGeoPoint.setText(geoPoint);
         tvPubDate.setText(pubDate);
         if (roundedDay==0){
-            tvTotalDays.setText("Current Incident");
+            tvTotalDays.setText("Today");
             tvTotalDays.setBackgroundColor(Color.GREEN);
             tvTotalDays.setTextColor(Color.BLACK);
         }else if(roundedDay <=10) {

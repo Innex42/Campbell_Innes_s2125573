@@ -9,8 +9,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Campbell_innes_s2125573">
-        <!--android:theme="@style/Theme.AppCompat.Light.NoActionBar" -->
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        >
+        <!--android:theme="@style/Theme.Campbell_innes_s2125573"-->
 
 
 
@@ -30,12 +31,14 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            />
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/title_activity_main">
+            android:label="@string/title_activity_main"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
