@@ -1,5 +1,6 @@
 package org.me.gcu.campbell_innes_s2125573;
-
+//Innes Campbell
+//S2125573
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;

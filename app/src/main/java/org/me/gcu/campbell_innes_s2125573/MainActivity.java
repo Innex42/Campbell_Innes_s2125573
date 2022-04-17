@@ -1,5 +1,6 @@
 package org.me.gcu.campbell_innes_s2125573;
-
+//Innes Campbell
+//S2125573
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -130,16 +131,22 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.roadworksButton:
                 //urlSource="https://trafficscotland.org/rss/feeds/roadworks.aspx";
                 listisRW=true;
+                listisPRW=false;
+                listisCI=false;
                 new Thread(new RoadworksDownload(roadworksUrlSource)).start();
                 break;
             case R.id.plannedRWButton:
                 //urlSource="https://trafficscotland.org/rss/feeds/plannedroadworks.aspx";
                 listisPRW=true;
+                listisCI=false;
+                listisRW=false;
                 new Thread(new PlannedRoadworksDownload(pRWUrlSource)).start();
                 break;
             case R.id.currentIncidentsButton:
                 //urlSource="https://trafficscotland.org/rss/feeds/currentincidents.aspx";
                 listisCI=true;
+                listisRW=false;
+                listisPRW=false;
                 new Thread(new CurrentIncidentsDownload(cIUrlSource)).start();
                 break;
         }
@@ -158,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void run()
         {
+            Log.e("MyTag","InCIThread");
             if (curIncList != null){
                 curIncList.clear();
             }
@@ -241,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void run()
     {
+        Log.e("MyTag","InPRWThread");
         if (planRWList != null){
             planRWList.clear();
         }
@@ -325,6 +334,7 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void run()
         {
+            Log.e("MyTag","InRWThread");
             if (roadworksList != null){
                 roadworksList.clear();
             }
